@@ -28,3 +28,8 @@
   border-style: solid;
     border-color: red;
 }
+
+.message {
+  background-color: red;
+  width: 100%;
+}

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import * as Chess from 'js-chess-engine';
 
 import styles from '../styles/Chess.module.css';
@@ -8,21 +7,18 @@ const GLYPHS = {
   k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟︎",
 };
 
-function wait(ms){
-   var start = new Date().getTime();
-   var end = start;
-   while(end < start + ms) {
-     end = new Date().getTime();
-  }
-}
-
 function makeGameFromEngine(div) {
   // make a new html <table> to render chess
   const board = document.createElement('table');
-  const message = document.createElement('p');
+  const messageRow = document.createElement('tr');
+  const message = document.createElement('td');
+
   let userTurn = true;
   message.id = "message";
+  message.setAttribute("colspan", 9)
   message.innerText="Your turn"
+  message.className=styles.message
+  messageRow.appendChild(message)
 
 
   const updateMessage = (msg) => {
@@ -32,11 +28,9 @@ function makeGameFromEngine(div) {
     _message.innerText = msg;
   }
 
-  /* updateMessage(); */
-
    
   board.className = styles.board;
-  fillInBoard(board);
+  fillInBoard(board, messageRow);
 
   // put that table into the div we control
   div?.appendChild(board);
@@ -107,6 +101,7 @@ function makeGameFromEngine(div) {
       /* game.move(movedFrom, movedTo); */
       gameState = game.exportJson();
 
+
       // update the text by clearing out the old square
       document.getElementById(movedFrom).innerText = "";
       // and putting the piece on the new square
@@ -138,7 +133,6 @@ function makeGameFromEngine(div) {
     });
 
 
-  board.appendChild(message)
 
 }
 
@@ -149,8 +143,9 @@ export default function ChessPage() {
 
 
 
-const fillInBoard = (board) => {
+const fillInBoard = (board, messageRow) => {
   const COLNAMES = " ABCDEFGH";
+  const main = document.createElement('div');
   const body = document.createElement('tbody');
   // make each row in the table
   for (let r = 8; r >= 1; r--) {
@@ -181,5 +176,7 @@ const fillInBoard = (board) => {
     footer.appendChild(label);
   }
   body.appendChild(footer);
+  body.appendChild(messageRow);
   board.appendChild(body);
+  main.appendChild(board)
 }
